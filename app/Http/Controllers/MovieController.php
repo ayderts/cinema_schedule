@@ -14,28 +14,32 @@ class MovieController extends Controller
 
     protected MovieService $movieService;
 
-    public function __construct(
-        MovieService $movieService,
-    )
+    public function __construct( MovieService $movieService)
     {
         $this->movieService = $movieService;
     }
 
-    public function index()
-    {
-        return Movie::all();
-    }
-
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function indexView()
     {
       return $this->movieService->indexView();
     }
 
+    /**
+     * @param Movie $movie
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function showView(Movie $movie)
     {
         return $this->movieService->showView($movie);
     }
 
+    /**
+     * @param MovieStoreRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function store(MovieStoreRequest $request)
     {
         $movie = Movie::create($request->except('image'));
@@ -46,16 +50,28 @@ class MovieController extends Controller
         return $this->indexView();
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function storeView()
     {
         return $this->movieService->storeView();
     }
 
+    /**
+     * @param Movie $movie
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function updateView(Movie $movie)
     {
         return $this->movieService->updateView($movie);
     }
 
+    /**
+     * @param Movie $movie
+     * @param MovieUpdateRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function update(Movie $movie,MovieUpdateRequest $request)
     {
         $data = $request->validated();
@@ -75,6 +91,10 @@ class MovieController extends Controller
         return view('admin.movies.show',compact('movie'));
     }
 
+    /**
+     * @param Movie $movie
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function destroy(Movie $movie)
     {
         return $this->movieService->destroy($movie);
