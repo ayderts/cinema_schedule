@@ -7,7 +7,7 @@
         <div class="d-flex justify-content-start align-items-center">
             <a href="{{ route('admin.movie.index') }}" class="btn btn-primary m-2">НАЗАД</a>
             <a href="{{ route('admin.movie.update',$movie->id) }}" class="btn btn-success m-2">РЕДАКТИРОВАТЬ</a>
-            <form action="{{ route('movie.destroy', ['movie_id' => $movie->id]) }}" class="m-2" method="POST">
+            <form action="{{ route('movie.destroy', ['movie' => $movie->id]) }}" class="m-2" method="POST">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger ">УДАЛИТЬ</button>

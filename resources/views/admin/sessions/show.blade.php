@@ -7,7 +7,7 @@
         <div class="d-flex justify-content-start align-items-center">
             <a href="{{ route('admin.session.index') }}" class="btn btn-primary m-2">НАЗАД</a>
             <a href="{{ route('admin.session.update',$session->id) }}" class="btn btn-success m-2">РЕДАКТИРОВАТЬ</a>
-            <form action="{{ route('session.destroy', ['session_id' => $session->id]) }}" class="m-2" method="POST">
+            <form action="{{ route('session.destroy', ['session' => $session->id]) }}" class="m-2" method="POST">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger ">УДАЛИТЬ</button>

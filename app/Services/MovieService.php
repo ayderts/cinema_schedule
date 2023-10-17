@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Models\Movie;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 
@@ -16,9 +17,8 @@ class MovieService
         return view('admin.movies.index',compact('movies'));
     }
 
-    public function showView(int $id)
+    public function showView(Movie $movie)
     {
-        $movie = Movie::find($id);
         return view('admin.movies.show',compact('movie'));
     }
 
@@ -28,15 +28,13 @@ class MovieService
         return view('admin.movies.store');
     }
 
-    public function updateView(int $id)
+    public function updateView(Movie $movie)
     {
-        $movie = Movie::find($id);
         return view('admin.movies.update',compact('movie'));
     }
 
-    public function destroy(int $id)
+    public function destroy(Model $movie)
     {
-        $movie = Movie::find($id);
         $movie->delete();
         return $this->indexView();
     }
