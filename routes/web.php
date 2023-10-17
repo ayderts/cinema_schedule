@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\SessionController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +21,26 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+Route::group(['prefix'=>'admin'],function (){
+    Route::get('/', [AdminController::class, 'index'])->name('home');
+    Route::get('/movie/index', [MovieController::class, 'indexView'])->name('admin.movie.index');
+    Route::get('/movie/store', [MovieController::class, 'storeView'])->name('admin.movie.store');
+    Route::get('/movie/{movie_id}', [MovieController::class, 'showView'])->name('admin.movie.show');
+    Route::get('/movie/{movie_id}/update', [MovieController::class, 'updateView'])->name('admin.movie.update');
+    Route::post('/movie/store', [MovieController::class, 'store'])->name('movie.store');
+    Route::patch('/movie/{movie_id}/update', [MovieController::class, 'update'])->name('movie.update');
+    Route::delete('/movie/{movie_id}', [MovieController::class, 'destroy'])->name('movie.destroy');
+
+    Route::get('/session/index', [SessionController::class, 'indexView'])->name('admin.session.index');
+    Route::get('/session/store', [SessionController::class, 'storeView'])->name('admin.session.store');
+    Route::get('/session/{session_id}', [SessionController::class, 'showView'])->name('admin.session.show');
+    Route::get('/session/{session_id}/update', [SessionController::class, 'updateView'])->name('admin.session.update');
+    Route::post('/session/store', [SessionController::class, 'store'])->name('session.store');
+    Route::patch('/session/{session_id}/update', [SessionController::class, 'update'])->name('session.update');
+    Route::delete('/session/{session_id}', [SessionController::class, 'destroy'])->name('session.destroy');
+
+})->middleware('auth');
+
+Route::get('/', [HomeController::class, 'index'])->name('home');

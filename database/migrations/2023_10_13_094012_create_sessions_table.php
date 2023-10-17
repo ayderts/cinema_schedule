@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sessions', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('movie_id');
-                $table->foreign('movie_id')->references('id')->on('movies');
+                $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');
                 $table->dateTime('date_time');
                 $table->integer('price');
                 $table->timestamps();
