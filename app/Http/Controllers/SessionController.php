@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MovieUpdateRequest;
 use App\Http\Requests\SessionStoreRequest;
+use App\Http\Requests\SessionUpdateRequest;
 use App\Models\Movie;
 use App\Models\Session;
 use App\Services\SessionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\View\View;
 
 class SessionController extends Controller
 {
@@ -38,7 +41,7 @@ class SessionController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function indexView()
+    public function indexView() : View
     {
         return $this->sessionService->indexView();
     }
@@ -47,7 +50,7 @@ class SessionController extends Controller
      * @param Session $session
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function showView(Session $session)
+    public function showView(Session $session) : View
     {
         return $this->sessionService->showView($session);
     }
@@ -56,7 +59,7 @@ class SessionController extends Controller
      * @param SessionStoreRequest $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function store(SessionStoreRequest $request)
+    public function store(SessionStoreRequest $request) : View
     {
         return $this->sessionService->store($request->validated());
     }
@@ -64,7 +67,7 @@ class SessionController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function storeView()
+    public function storeView() : View
     {
         return $this->sessionService->storeView();
     }
@@ -81,17 +84,10 @@ class SessionController extends Controller
     /**
      * @param Session $session
      * @param MovieUpdateRequest $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function update(Session $session,MovieUpdateRequest $request){
-        $data = $request->validated();
-        $data = array_filter($data, function ($value) {
-            return !is_null($value) && $value !== '';
-        });
-        $session->fill($data);
-        $session->save();
-
-        return view('admin.sessions.show',compact('session'));
+    public function update(Session $session,SessionUpdateRequest $request) : View
+    {
+        return $this->sessionService->update($session,$request->validated());
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Http\Requests\MovieUpdateRequest;
 use App\Models\Movie;
 use App\Services\MovieService;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use phpseclib3\File\ASN1\Maps\PostalAddress;
 
 class MovieController extends Controller
@@ -22,7 +23,7 @@ class MovieController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function indexView()
+    public function indexView() : View
     {
       return $this->movieService->indexView();
     }
@@ -31,7 +32,7 @@ class MovieController extends Controller
      * @param Movie $movie
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function showView(Movie $movie)
+    public function showView(Movie $movie) : View
     {
         return $this->movieService->showView($movie);
     }
@@ -40,20 +41,15 @@ class MovieController extends Controller
      * @param MovieStoreRequest $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function store(MovieStoreRequest $request)
+    public function store(MovieStoreRequest $request) : View
     {
-        $movie = Movie::create($request->except('image'));
-        $image = $request->file('image');
-        $imageName = $movie->id . '.' . $image->getClientOriginalExtension();
-        $movie->update(['image' => $imageName]);
-        $image->move(public_path('images'), $imageName);
-        return $this->indexView();
+        return $this->movieService->store($request->validated());
     }
 
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function storeView()
+    public function storeView() : View
     {
         return $this->movieService->storeView();
     }
@@ -62,7 +58,7 @@ class MovieController extends Controller
      * @param Movie $movie
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function updateView(Movie $movie)
+    public function updateView(Movie $movie) : View
     {
         return $this->movieService->updateView($movie);
     }
@@ -72,30 +68,16 @@ class MovieController extends Controller
      * @param MovieUpdateRequest $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function update(Movie $movie,MovieUpdateRequest $request)
+    public function update(Movie $movie,MovieUpdateRequest $request) : View
     {
-        $data = $request->validated();
-        $data = array_filter($data, function ($value) {
-            return !is_null($value) && $value !== '';
-        });
-        $movie->fill($data);
-        if($request->has('image')){
-            $image = $data['image'];
-            unset($data['image']);
-            $imageName = $movie->id . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            $movie->image = $imageName;
-        }
-
-        $movie->save();
-        return view('admin.movies.show',compact('movie'));
+        return $this->movieService->update($movie,$request->validated());
     }
 
     /**
      * @param Movie $movie
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function destroy(Movie $movie)
+    public function destroy(Movie $movie) : View
     {
         return $this->movieService->destroy($movie);
     }

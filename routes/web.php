@@ -38,8 +38,10 @@ Route::group(['prefix'=>'admin'],function (){
     Route::get('/session/store', [SessionController::class, 'storeView'])->name('admin.session.store');
     Route::get('/session/{session}', [SessionController::class, 'showView'])->name('admin.session.show');
     Route::get('/session/{session}/update', [SessionController::class, 'updateView'])->name('admin.session.update');
-    Route::post('/session/store', [SessionController::class, 'store'])->name('session.store');
-    Route::patch('/session/{session}/update', [SessionController::class, 'update'])->name('session.update');
+    Route::post('/session/store', [SessionController::class, 'store'])->name('session.store')
+        ->middleware('CheckSessionTimeStore');;
+    Route::patch('/session/{session}/update', [SessionController::class, 'update'])->name('session.update')
+        ->middleware('checkSessionTimeUpdate');
     Route::delete('/session/{session}', [SessionController::class, 'destroy'])->name('session.destroy');
 
 })->middleware('auth');

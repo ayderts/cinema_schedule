@@ -26,33 +26,7 @@ class SessionStoreRequest extends FormRequest
         return [
             'price' => ['required','integer'],
             'movie_id' => ['required','integer'],
-            'date_time' => [
-                'required',
-                'date',
-                function ($attribute, $value, $fail) {
-                    $prevSession = Session::where('date_time', '<=', $value)
-                        ->orderByDesc('date_time')
-                        ->first();
-                    $nextSession = Session::where('date_time', '>=', $value)
-                        ->orderBy('date_time')
-                        ->first();
-
-                    if ($prevSession) {
-                        $minTime = Carbon::parse($prevSession->date_time)->addMinutes(30);
-
-                        if (Carbon::parse($value) < $minTime) {
-                            $fail('Время между сеансами должно быть не менее 30 минут');
-                        }
-                    }
-                    if ($nextSession) {
-                        $minTime = Carbon::parse($nextSession->date_time)->subMinutes(30);
-
-                        if (Carbon::parse($value) > $minTime) {
-                            $fail('Время между сеансами должно быть не менее 30 минут');
-                        }
-                    }
-                },
-            ],
+            'date_time' => ['required', 'date',],
         ];
     }
 }
